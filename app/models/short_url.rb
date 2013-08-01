@@ -31,11 +31,12 @@ class ShortUrl < ActiveRecord::Base
 
   def self.expand(short_url)
     short_url = ShortUrl.find_by_short_url(short_url)
-    puts short_url.comments
-
-    url = LongUrl.where( :short_url_id => short_url.id ).url
+    long_url_id = short_url.long_url.id
+    url = LongUrl.find(long_url_id).url
     Launchy.open(url)
 
+    comments = short_url.comments.map { |comment| comment.body }
+    puts comments
   end
 
   def self.get_comments(short_url)
